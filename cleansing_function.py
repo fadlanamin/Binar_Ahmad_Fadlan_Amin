@@ -6,14 +6,22 @@ import pandas as pd
 
 def text_cleansing(text):
     # Bersihkan tanda baca (selain huruf dan angka)
-    clean_text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
-   
+    clean_text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
+    clean_text = re.sub(r'anjing','***', text)
+    clean_text = re.sub(r'bangsat','***', text)
+    
+
     # yg lain
     clean_text = clean_text.lower()
    
     # Bersihkan dengan kamus alay
     
+
+
     # Bersihkan dengan kamus abusive
+
+
+
     return clean_text
 
 def cleansing_files(file_upload):
@@ -34,7 +42,7 @@ def cleansing_files(file_upload):
     # Bersihkan text menggunakan fungsi text_cleansing
     # Simpan di kolom "clean_text"
 
-    
+
     df_upload["clean_text"] = df_upload["raw_text"].apply(text_cleansing)
     print("Cleansing text success!")
     return df_upload
