@@ -32,6 +32,7 @@ def insert_dictionary_to_db(conn):
     df_alay.to_sql('alay', conn, if_exists='replace', index=False)
     print("Inserting dataframe to database success!")
     
+
 def insert_result_to_db(conn, raw_text, clean_text):
 
     # Insert result to database
