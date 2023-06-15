@@ -7,22 +7,15 @@ import sqlite3
 
 conn = sqlite3.connect('raw_data.db')
 
-#Import of Abusive Words, Alay Words and Clean Alay Words
+#Import of Abusive Words and change into Lists and adjust the special characters for regexx pattern
 data_abusive = pd.read_sql('Select word from abusive', conn)
-data_alay_word = pd.read_sql('Select alay_word from alay', conn)
-data_alay_clean = pd.read_sql('Select formal_word from alay', conn)
-
-
-#Change Abusive and Alay into Lists and Adjust the special characters for RegEx Pattern
 df_abusive_list = data_abusive.values.tolist()
-df_dict = str(df_abusive_list).replace('[','').replace(']','').replace(',','|').replace("'","")
+df_dict_abusive = str(df_abusive_list).replace('[','').replace('[','').replace(']','').replace(',','|').replace("'","")
 
-df_alay_words = data_alay_word.values.tolist()
-df_alay = str(df_alay_words).replace('[','').replace(']','').replace(',','|').replace("'","")
-
-df_formal_words = data_alay_clean.values.tolist()
-df_formal = str(df_formal_words).replace('[','').replace(']','').replace(',','|').replace("'","")
-
+# Import of alay words and change ino dictionary to lookup the formal words
+# Alay words is used as key to lookup the formal words as value
+data_alay_word = pd.read_sql('Select * from alay', conn)
+df_alay = dict(zip(data_alay_word['alay_word'],data_alay_word['formal_word']))
 
 def text_cleansing(text):
     # Bersihkan tanda baca (selain phuruf dan angka)
@@ -32,14 +25,12 @@ def text_cleansing(text):
     clean_text = clean_text.lower()
    
     # Masking abusive words with xxx 
-    clean_text = re.sub(df_dict, ' xxx', text) 
+    clean_text = re.sub(f'\{df_dict_abusive}\S+', ' xxx', clean_text)
 
     # Replacing alay words with its formal words
-    clean_text = re.sub(df_alay, df_dict, text)
+    clean_text = " ".join(df_alay.get(x, x) for x in clean_text.split())
 
     return clean_text
-
-
 
 def cleansing_files(file_upload):
     # Read csv file upload, jika error dengan metode biasa, gunakan encoding latin-1
