@@ -28,16 +28,13 @@ def text_cleansing(text):
     clean_text = re.sub(f'\{df_dict_abusive}\S+', ' xxx', clean_text)
 
     # Replacing alay words with its formal words
-    clean_text = " ".join(df_alay.get(x, x) for x in clean_text.split())
+    clean_text = " ".join(df_alay.get(word, word) for word in clean_text.split())
 
     return clean_text
 
 def cleansing_files(file_upload):
-    # Read csv file upload, jika error dengan metode biasa, gunakan encoding latin-1
-    try:
-        df_upload = pd.read_csv(file_upload)
-    except:
-        df_upload = pd.read_csv(file_upload, encoding="latin-1")
+    # Read csv file upload gunakan encoding latin-1
+    df_upload = pd.read_csv(file_upload, encoding="latin-1")
     print("Read dataframe from Upload success!")
     # Ambil hanya kolom pertama saja 
 
@@ -46,7 +43,8 @@ def cleansing_files(file_upload):
 
     df_upload.columns = ["raw_text"]
 
-    # Bersihkan text menggunakan fungsi text_cleansing
+    # Bersihkan text menggunakan fungsi text_cleansing    
+
     # Simpan di kolom "clean_text"
     df_upload["clean_text"] = df_upload["raw_text"].apply(text_cleansing)
     print("Cleansing text success!")
