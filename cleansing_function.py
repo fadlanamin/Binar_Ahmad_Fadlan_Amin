@@ -18,10 +18,10 @@ data_alay_word = pd.read_sql('Select * from alay', conn)
 df_alay = dict(zip(data_alay_word['alay_word'],data_alay_word['formal_word']))
 
 def text_cleansing(text):
-    # Bersihkan tanda baca (selain phuruf dan angka)
+    # Non-alphabet and numbers cleansing
     clean_text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
 
-    # yg lain
+    # Lower text
     clean_text = clean_text.lower()
    
     # Masking abusive words with xxx 
